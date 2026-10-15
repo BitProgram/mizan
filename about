@@ -1,0 +1,280 @@
+MizanZarb — Master Task List
+A. Foundation (Done ✅)
+☑ Name selected: MizanZarb
+☑ Studio brand: BitProgram
+☑ GitHub org created
+☑ SSH key set up
+☑ Personal account renamed: ahmedhassancodes
+☑ Repo created: bitprogram/mizan-zarb (public, MIT)
+☑ Core files written: money.py, models.py, errors.py
+☑ Tests written: test_money.py
+B. Repo Scaffolding (In Progress)
+☑ Folder structure created
+☑ .gitignore
+☑ .gitattributes
+☑ CHANGELOG.md
+☑ CONTRIBUTING.md
+☑ docs/index.md
+☑ src/mizan_zarb/__init__.py
+☑ src/mizan_zarb/cli.py (placeholder)
+☑ tests/__init__.py
+□ LICENSE (MIT)
+□ README.md
+□ pyproject.toml
+□ .github/workflows/ci.yml
+□ src/mizan_zarb_core/__init__.py
+□ src/mizan_zarb_core/errors.py (paste)
+□ src/mizan_zarb_core/money.py (paste)
+□ src/mizan_zarb_core/models.py (paste)
+□ tests/test_money.py (paste)
+□ First commit + push
+□ CI green
+C. Core Engine (mizan_zarb_core)
+Money & Models
+☑ money.py — Decimal primitives, formatting, safe math
+☑ models.py — dataclasses for all entities
+☑ errors.py — exception hierarchy
+Storage
+□ storage.py — JSON load/save
+□ Atomic writes (temp file + rename)
+□ Schema versioning field
+□ Migration framework
+□ Auto-backup before save
+□ Location resolution (XDG, macOS, Windows)
+Validation
+□ validation.py — email, ISO date, enum validators
+□ Amount validator
+□ Currency validator
+□ Platform fee lookup
+Formulas
+□ mrr() — MRR with lifetime amortization
+□ arr() — annualized
+□ arpu() — average revenue per user
+□ gross_margin() — net revenue − COGS
+□ revenue_churn() — churned MRR ÷ starting MRR
+□ customer_churn() — churned customers ÷ starting
+□ ltv_simple() — ARPU ÷ churn
+□ ltv_real() — LTV × gross margin
+□ cac() — acquisition spend ÷ new customers
+□ ltv_cac_ratio()
+□ payback_months()
+□ net_burn()
+□ runway_months()
+□ break_even_mrr()
+□ break_even_customers()
+□ platform_fee() — Stripe, Paddle, Gumroad, AppStore
+□ effective_hourly_rate() — per product
+□ concentration() — top-N customer %
+□ budget_variance()
+Reports (structured data out, no UI)
+□ dashboard_snapshot()
+□ monthly_pl()
+□ mrr_movements()
+□ unit_economics()
+□ runway_report()
+□ forecast_30d()
+□ cohort_retention()
+□ customer_concentration()
+□ tax_reserve_statement()
+□ product_effective_rate()
+□ category_breakdown()
+Import/Export
+□ CSV import: transactions
+□ CSV import: expenses
+□ CSV import: subscriptions
+□ JSON export (full state)
+□ CSV export: any report
+□ Stripe CSV parser
+□ Paddle CSV parser
+□ Gumroad CSV parser
+D. CLI (mizan_zarb)
+Infrastructure
+□ render.py — table engine
+□ Color support + --no-color
+□ Terminal width detection
+□ prompts.py — input with validation
+□ config.py — settings file path
+□ app.py — main loop
+□ cli.py — argparse subcommands
+Screens
+□ First-run wizard
+□ Main menu
+□ Dashboard
+□ Products (list, add, view, edit, log hours)
+□ Customers (list, add, view, edit, churn)
+□ Subscriptions (list, add, upgrade, cancel)
+□ MRR movements
+□ Transactions (list, add, filter)
+□ Platform fee breakdown
+□ Expenses (list, add, edit, delete)
+□ Recurring expenses (normalized monthly)
+□ Acquisition channels
+□ CAC trend
+□ Reports menu
+□ Settings
+□ Help
+□ --version
+Scriptable subcommands
+□ mizan dashboard
+□ mizan report pnl --month YYYY-MM
+□ mizan report runway
+□ mizan report forecast
+□ mizan customers list
+□ mizan customers add
+□ mizan export --format csv --out FILE
+E. Features — The 8 Pillars
+Pillar 1: Multi-Product, Multi-Currency
+□ Per-product MRR/ARR/ARPU
+□ Multi-currency support
+□ Historical FX rate storage
+□ FX cost tracking
+Pillar 2: Real Gross Margin
+□ COGS vs fixed expense flag
+□ Auto-detection of common COGS vendors
+□ Per-product COGS allocation
+□ COGS growth alerts
+Pillar 3: Tax Reality
+□ Country-aware tax reserve
+□ Quarterly estimate
+□ Locked reserve balance
+□ Deductible flag per expense
+□ Accountant-ready export
+□ VAT/sales tax tracking
+□ Insufficient-reserve warning
+Pillar 4: Survival Metrics
+□ Runway calculation
+□ Break-even MRR/customers
+□ Days-to-zero date
+□ What-if scenarios
+□ Low-runway warnings
+Pillar 5: Cohort & Churn Intelligence
+□ Monthly retention cohorts
+□ Churn by channel
+□ Churn by plan
+□ Churn by tenure
+□ Resurrection tracking
+□ Revenue churn vs customer churn
+□ Cohort LTV
+Pillar 6: Product Truth
+□ Dev hours logged per product
+□ Effective hourly rate
+□ Consulting-rate comparison
+□ Opportunity cost calculator
+Pillar 7: Local-First
+□ Everything works offline
+□ Human-readable state file
+□ Full export to CSV/JSON
+□ Scriptable CLI
+□ Backup/restore commands
+□ Git-friendly state
+□ Import from existing CSVs
+Pillar 8: Ecosystem
+□ Public Python API
+□ Plugin system
+□ Community report scripts
+□ Webhooks (MRR threshold, churn, low runway)
+□ Extension points (fee tables, currencies)
+□ GUI as flagship consumer
+F. Growth & Community
+□ Org profile README (bitprogram/.github)
+□ Social preview image for repo
+□ Repo topics + description
+□ Pin mizan-zarb on org profile
+□ Discussions enabled
+□ Issue templates (bug, feature)
+□ Good-first-issue labels
+□ Public roadmap (project board)
+□ README with GIF demo
+□ Docs site on GitHub Pages
+□ Announce on HN (when usable)
+□ Post on r/SideProject, r/selfhosted
+□ Tweet thread with demo
+□ Product Hunt launch
+□ Awesome-list submissions
+□ Newsletter: 1-month, 6-month, 1-year updates
+□ Blog post: "Why I built MizanZarb"
+□ Sponsor button (once value is proven)
+G. Paid GUI (mizan_zarb_studio — Later)
+□ Private repo created
+□ Imports mizan_zarb_core from PyPI
+□ Charts (matplotlib / plotly)
+□ Cohort heatmap
+□ Drag-and-drop invoice builder
+□ Stripe / Paddle / Gumroad sync
+□ Scheduled reports (email / Slack)
+□ Encrypted local vault
+□ Desktop packaging (DMG, MSI, AppImage)
+□ Code signing
+□ License key validation
+□ Auto-updater
+□ Crash reporting
+□ Purchase page on Gumroad
+□ Landing page
+□ EULA + PRIVACY + REFUNDS docs
+H. Business & Legal
+□ Register bitprogram.com
+□ Register mizan-zarb.dev
+□ Set up email: hello@bitprogram.com
+□ File US trademark for "MizanZarb"
+□ Draft EULA (generic, studio-wide)
+□ Draft PRIVACY (generic, studio-wide)
+□ Draft REFUNDS
+□ Consult lawyer (when revenue > $10K)
+□ Accounting: track MizanZarb revenue/expenses
+□ Set up Gumroad product page
+□ Pricing decision ($59 one-time, 1yr updates)
+□ Affiliate/referral program (maybe)
+I. Milestones
+v0.0.1 — Foundation
+□ Core: money, models, errors ✅
+□ Storage + validation
+□ First push to GitHub
+□ CI green
+v0.1.0 — Usable
+□ All formulas working
+□ All reports working
+□ Basic CLI (dashboard, list, add)
+□ JSON state works
+□ Installable via pipx
+v0.5.0 — Alpha
+□ All CLI screens
+□ Import from Stripe CSV
+□ Export reports to CSV
+□ Scriptable subcommands
+□ Documented in docs/
+v1.0.0 — Launch
+□ Polished CLI
+□ Docs site live
+□ README with demo GIF
+□ HN / Reddit / PH launch
+□ v1.0 tag on PyPI
+v1.1+ — Growth
+□ Plugin system
+□ Webhooks
+□ Multi-currency
+□ Tax rules per country
+□ Community contributions merged
+v2.0 — GUI
+□ mizan-zarb-studio on Gumroad
+□ First paying customers
+□ Charts, sync, scheduled reports
+J. Daily / Weekly Habits
+□ Commit every working day
+□ Update CHANGELOG with each feature
+□ Tick a roadmap checkbox when something lands
+□ Fix issues within 72 hours
+□ Write one test per formula
+□ No feature without type hints + mypy passing
+□ No commit without ruff check . passing
+K. Rules (Never Break)
+□ Zero runtime dependencies in core
+□ Money is Decimal, never float
+□ No print() / input() in core
+□ All formulas have tests
+□ Business logic never in CLI or GUI
+□ MIT license stays MIT
+□ CLI stays free forever
+□ Never break the public API without a major version bump
+That's the whole map. Every checkbox is a real task. Tick them one at a time.
+
+When you're ready, say "next" and I'll give you the next batch of files (LICENSE, README.md, pyproject.toml, ci.yml, and the core files to paste).
