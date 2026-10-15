@@ -1,0 +1,292 @@
+# MizanZarb
+
+> The scale for your money.
+
+A local-first, open-source money operating system for solo software
+developers. Know your MRR, burn, runway, and break-even — without a
+cloud account, without vendor lock-in, without lying to yourself about
+the numbers.
+
+---
+
+## The Problem
+
+Solo software developers — indie hackers, SaaS founders, app makers —
+run real businesses. They collect revenue from Stripe, Paddle, Gumroad,
+the App Store, and direct sales. They pay for infrastructure that scales
+with users (Vercel, Supabase, OpenAI, S3) and tools that don't (Figma,
+GitHub, Linear). They owe quarterly taxes with no payroll withholding.
+
+Their existing tools fall into two useless buckets:
+
+1. **Accounting tools** (FreshBooks, Wave, QuickBooks) — know what you
+   spent, blind to what your business is worth. Built for invoice-heavy
+   service freelancers, not product-based SaaS.
+
+2. **Revenue trackers** (Solopreneur, qdBox, SaaSMon) — know what you
+   earned, blind to what it cost, and whether you're actually profitable.
+
+Nobody combines revenue normalization, cost separation, survival math,
+and unit economics in one tool. Nobody does it local-first. Nobody does
+it open-source. Nobody gives you a scriptable CLI.
+
+**MizanZarb fills that gap.**
+
+---
+
+## Who It's For
+
+A solo developer running one or more software products, collecting
+revenue from at least one subscription platform, paying for
+infrastructure that scales with users, and filing their own taxes.
+
+They are technical. They live in a terminal. They distrust cloud
+services with their financial data. They want their numbers to be
+**correct**, not pretty. They want to script things. They want their
+data in a file they can read, grep, back up, and take with them.
+
+They are not looking for accounting software. They are looking for a
+**business instrument**.
+
+---
+
+## What It Does
+
+### 1. Revenue normalization
+Turns monthly, annual, lifetime, and one-time revenue into one honest
+MRR number. Annual deals divided by 12. Lifetime deals amortized over
+a configurable window. Multi-currency with historical FX rates. No
+platform is special-cased; every source flows through the same pipeline.
+
+### 2. Real gross margin
+Every expense is tagged COGS or fixed. Vercel scales with users, so
+it's COGS. Figma doesn't, so it's fixed. This distinction — which no
+competitor makes — is what produces a real gross margin instead of a
+meaningless "profit" number.
+
+### 3. Survival metrics
+Runway = available cash ÷ trailing-3-month net burn. Break-even MRR =
+monthly fixed costs ÷ gross margin. Days-to-zero. What-if scenarios
+("what if churn doubles?"). Alerts when cash is running low.
+
+### 4. Unit economics
+ARPU, LTV (simple and real), CAC, LTV:CAC ratio, payback period,
+revenue churn, customer churn, cohort retention, resurrection rate.
+The metrics that decide whether the business is alive.
+
+### 5. Product-level truth
+Dev hours logged per product. Net revenue per product. Effective
+hourly rate per product. Comparison to your consulting rate. When a
+product pays $12/hr and your consulting rate is $75/hr, that's not a
+minor detail — it's a career decision, and the tool tells you.
+
+### 6. Tax reality
+Country-aware tax reserve. Quarterly estimate. Locked reserve balance
+that never counts as spendable cash. Deductible flag per expense.
+Export in a format your accountant accepts. VAT/sales tax handling
+for EU/UK customers.
+
+### 7. Customer concentration risk
+Top-1, top-3, top-10 customer share of MRR. Benchmarked as healthy,
+watch, or dangerous. Alerts when a single customer is a business risk.
+
+### 8. Local-first, scriptable, zero lock-in
+Your data is a JSON file. Everything works offline. Every report
+exports to CSV or JSON. Full CLI for scripting:
+`mizan report pnl --month 2026-10 | mail accountant@example.com`.
+Backup and restore commands. Git-friendly state.
+
+---
+
+## Architecture
+
+Three layers, one engine, two frontends.
+
+    ┌──────────────────────────────────────────────┐
+    │             mizan_zarb_core                  │
+    │  (MIT, public — the engine)                  │
+    │  money, models, validation, storage,         │
+    │  formulas, reports, analytics, importers     │
+    │  No print. No input. No UI. No I/O in APIs. │
+    └──────────────────────────────────────────────┘
+                         ▲
+                         │ imports
+            ┌────────────┴───────────────┐
+            │                            │
+    ┌───────┴───────┐          ┌─────────┴──────────┐
+    │  mizan_zarb   │          │ mizan_zarb_studio  │
+    │  CLI (MIT)    │          │ (proprietary GUI)  │
+    │  Free forever │          │ Paid, one-time     │
+    └───────────────┘          └────────────────────┘
+
+**The engine is the product.** The CLI and GUI are consumers of it.
+Anyone can import `mizan_zarb_core` and build their own frontend. This
+is what makes the project a platform, not just a tool.
+
+### Non-negotiable boundaries
+
+`mizan_zarb_core` may NOT:
+- `print()`
+- `input()`
+- `sys.exit()`
+- Touch ANSI colors, tables, or terminal width
+- Know what a menu is
+- Import from `mizan_zarb` or `mizan_zarb_studio`
+
+`mizan_zarb` may NOT:
+- Contain any business formula (no `mrr = sum(...)`)
+- Import from `mizan_zarb_studio`
+
+`mizan_zarb_studio` may NOT:
+- Contain any business formula
+- Import from `mizan_zarb`
+
+If you can delete the CLI folder and `core` still passes all tests,
+the boundary is clean.
+
+---
+
+## Repo Layout
+
+    bitprogram/mizan-zarb/              Public, MIT. Core + CLI.
+    bitprogram/mizan-zarb-studio/       Private, EULA. GUI.
+    bitprogram/.github/                 Public. Org profile + templates.
+
+Full structure documented in the project task list.
+
+---
+
+## Tech Stack
+
+- **Language:** Python 3.11+ (uses `StrEnum`, `tomllib`, `X | Y` unions)
+- **Runtime dependencies:** zero. Standard library only.
+- **Money type:** `decimal.Decimal` everywhere internally. Never `float`.
+  Strings are the only safe boundary for parsing.
+- **Data shapes:** `dataclasses`. Frozen by default. `Literal` types for
+  enums.
+- **Type checking:** `mypy --strict`, no exceptions.
+- **Linting:** `ruff` with a strict ruleset.
+- **Testing:** `pytest` with coverage reports.
+- **Build system:** `hatchling`.
+- **CI:** GitHub Actions on Python 3.11, 3.12, 3.13.
+- **Storage:** JSON file in a platform-appropriate location. Atomic
+  writes (temp file + rename). Schema versioning with migrations.
+- **Distribution:** PyPI as `mizan-zarb`. Users install via `pipx`.
+  The CLI command is `mizan`.
+
+---
+
+## The Rules (never break)
+
+1. Money is `Decimal`, never `float`. Ever.
+2. Zero runtime dependencies in the engine. Ever.
+3. No `print()`, `input()`, or `sys.exit()` in `mizan_zarb_core`.
+4. Every function has type hints. `mypy --strict` passes.
+5. Every formula has tests.
+6. Business logic never leaks into the CLI or the GUI.
+7. The public API of `mizan_zarb_core` is a contract. Breaking it
+   requires a major version bump.
+8. The CLI stays free forever. No upsells inside it. The GUI is the
+   paid product.
+9. MIT license stays MIT. Do not relicense the open core.
+10. Local-first means local-first. No cloud backend. No telemetry
+    without explicit opt-in. Your data is a file you own.
+
+---
+
+## Build Order (core engine)
+
+    1. errors.py           ← exception hierarchy
+    2. money.py            ← Decimal primitives, formatting, safe math
+    3. models.py           ← dataclasses for all entities
+    4. __init__.py         ← public API surface
+    5. validation.py       ← email, date, ISO, enum validators
+    6. storage/            ← json_store, atomic, paths, backup, migrations
+    7. config/             ← schema, defaults, loader
+    8. fees/               ← one module per platform
+    9. currency/           ← FX engine
+    10. formulas/          ← revenue, churn, unit_econ, margins, survival, goals
+    11. analytics/         ← cohort, concentration, forecast, anomaly, effective_rate
+    12. reports/           ← one module per report
+    13. tax/               ← rules, quarterly, vat, deductible
+    14. budget/            ← limits, variance, alerts
+    15. recurring/         ← normalize, project, detect
+    16. notifications/     ← rules, triggers, events
+    17. webhooks/          ← dispatcher, payloads
+    18. plugins/           ← registry, hooks, api
+    19. api/               ← local HTTP server for GUI
+    20. search/            ← index, query
+    21. tags/              ← cross-cutting labels
+    22. audit/             ← append-only change log
+    23. importers/         ← stripe, paddle, gumroad, appstore, generic
+    24. exporters/         ← csv, json, pdf, accountant
+    25. invoicing/         ← generator, numbering, branding
+    26. time_tracking/     ← hours, effective_rate
+    27. sandbox/           ← demo_data, reset
+    28. sync/              ← orchestrator, conflict, state
+
+Then the CLI, then the GUI.
+
+---
+
+## Current Status
+
+**Done:**
+- Studio brand, org, and public repo created
+- Local clone with SSH working
+- Scaffolding: LICENSE, README, pyproject.toml, CHANGELOG, .gitignore,
+  .gitattributes
+
+**In progress:**
+- Writing `src/mizan_zarb_core/errors.py`
+
+**Not started:**
+- Everything else in the build order
+
+---
+
+## How to Work On This
+
+The founder is learning. The workflow is:
+
+1. Explain **why** a file exists before discussing **what** goes in it.
+2. Show a tiny example (5–10 lines) of the pattern, not the whole file.
+3. Let the founder write the file.
+4. Review it, point out issues, explain the fixes.
+5. Do not paste complete files unless asked.
+6. Do not skip steps in the build order.
+7. Do not add features before the current file passes tests.
+8. Prefer honesty over encouragement. If the code is wrong, say so.
+
+Every file is a chapter, not a sentence. Every commit is a brick.
+
+---
+
+## Long-Term Vision
+
+**Year 1:** 500 GitHub stars, 5,000 pip installs, 50 paying GUI
+customers, 10 contributors.
+
+**Year 2:** 2,000 stars, 30,000 installs, 500 GUI customers, used by
+recognized indie devs publicly.
+
+**Year 3:** Recognized as "the indie money tool," 1,000+ paying
+customers, competitors start copying the formulas (a good sign),
+possibly a small acquisition offer.
+
+That's not a unicorn. That's becoming the default choice for a
+specific, underserved, well-defined audience. Worth more than being a
+mediocre tool for everyone.
+
+---
+
+## The One-Line Truth
+
+**The engine is the product. The CLI proves the numbers are right. The
+GUI proves the numbers are beautiful. Charge for beautiful, never for
+right.**
+
+---
+
+Made by BitProgram.
+Maintained by Ahmed Hassan Khan.
