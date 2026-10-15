@@ -1,0 +1,459 @@
+mizan-zarb/
+|
+|-- .github/
+|   |-- workflows/
+|   |   |-- ci.yml                    # test/lint/type-check on push
+|   |   |-- release.yml               # publish to PyPI on tag
+|   |   |-- docs.yml                  # deploy docs site
+|   |   `-- security.yml              # weekly dependency scan
+|   |-- ISSUE_TEMPLATE/
+|   |   |-- bug_report.yml
+|   |   |-- feature_request.yml
+|   |   `-- config.yml
+|   `-- PULL_REQUEST_TEMPLATE.md
+|
+|-- docs/
+|   |-- index.md
+|   |-- install.md
+|   |-- quickstart.md
+|   |-- commands/
+|   |   |-- dashboard.md
+|   |   |-- products.md
+|   |   |-- customers.md
+|   |   |-- subscriptions.md
+|   |   |-- transactions.md
+|   |   |-- expenses.md
+|   |   |-- acquisition.md
+|   |   |-- reports.md
+|   |   |-- import-export.md
+|   |   |-- backup.md
+|   |   `-- settings.md
+|   |-- formulas/
+|   |   |-- mrr.md
+|   |   |-- arr.md
+|   |   |-- arpu.md
+|   |   |-- churn.md
+|   |   |-- ltv.md
+|   |   |-- cac.md
+|   |   |-- payback.md
+|   |   |-- gross-margin.md
+|   |   |-- runway.md
+|   |   |-- break-even.md
+|   |   `-- effective-rate.md
+|   |-- concepts/
+|   |   |-- cogs-vs-fixed.md
+|   |   |-- mrr-normalization.md
+|   |   |-- lifetime-deal-amortization.md
+|   |   |-- tax-reserve.md
+|   |   |-- multi-currency.md
+|   |   `-- cohorts-explained.md
+|   |-- plugins/
+|   |   |-- overview.md
+|   |   |-- writing-a-plugin.md
+|   |   `-- api-reference.md
+|   `-- contributing.md
+|
+|-- src/
+|   |
+|   |-- mizan_zarb_core/              # THE ENGINE (MIT, no UI, no I/O)
+|   |   |-- __init__.py               # public API surface
+|   |   |-- errors.py                 # exception hierarchy
+|   |   |-- money.py                  # Decimal money primitives
+|   |   |-- models.py                 # dataclass domain models
+|   |   |-- validation.py             # email, date, ISO validators
+|   |   |
+|   |   |-- config/
+|   |   |   |-- __init__.py
+|   |   |   |-- schema.py             # declarative settings schema
+|   |   |   |-- defaults.py
+|   |   |   `-- loader.py
+|   |   |
+|   |   |-- storage/
+|   |   |   |-- __init__.py
+|   |   |   |-- json_store.py         # load/save state
+|   |   |   |-- atomic.py             # temp-file-then-rename writes
+|   |   |   |-- paths.py              # XDG, macOS, Windows paths
+|   |   |   |-- backup.py             # auto-snapshots, retention
+|   |   |   `-- migrations.py         # schema version upgrades
+|   |   |
+|   |   |-- fees/
+|   |   |   |-- __init__.py
+|   |   |   |-- registry.py           # lookup by platform name
+|   |   |   |-- stripe.py             # 2.9% + $0.30
+|   |   |   |-- paddle.py             # 5% + $0.50
+|   |   |   |-- gumroad.py            # 10%
+|   |   |   |-- appstore.py           # 30% or 15%
+|   |   |   |-- direct.py             # 0%
+|   |   |   `-- manual.py
+|   |   |
+|   |   |-- currency/
+|   |   |   |-- __init__.py
+|   |   |   |-- converter.py          # convert at historical rate
+|   |   |   |-- rates.py              # store and lookup FX rates
+|   |   |   `-- pairs.py
+|   |   |
+|   |   |-- formulas/
+|   |   |   |-- __init__.py
+|   |   |   |-- revenue.py            # MRR, ARR, ARPU, expansion, contraction
+|   |   |   |-- churn.py              # customer churn, revenue churn
+|   |   |   |-- unit_econ.py          # LTV, CAC, payback
+|   |   |   |-- margins.py            # gross margin, COGS allocation
+|   |   |   |-- survival.py           # runway, break-even, days-to-zero
+|   |   |   `-- goals.py              # progress vs targets
+|   |   |
+|   |   |-- analytics/
+|   |   |   |-- __init__.py
+|   |   |   |-- cohort.py             # retention cohorts
+|   |   |   |-- concentration.py      # customer concentration risk
+|   |   |   |-- forecast.py           # 30-day projection
+|   |   |   |-- anomaly.py            # detect spikes and drops
+|   |   |   `-- effective_rate.py     # per-product hourly rate
+|   |   |
+|   |   |-- reports/
+|   |   |   |-- __init__.py
+|   |   |   |-- dashboard.py
+|   |   |   |-- pnl.py
+|   |   |   |-- mrr_movements.py
+|   |   |   |-- runway.py
+|   |   |   |-- forecast.py
+|   |   |   |-- cohorts.py
+|   |   |   |-- concentration.py
+|   |   |   |-- tax_reserve.py
+|   |   |   `-- category_breakdown.py
+|   |   |
+|   |   |-- tax/
+|   |   |   |-- __init__.py
+|   |   |   |-- rules.py              # per-country rules
+|   |   |   |-- quarterly.py          # quarterly estimates
+|   |   |   |-- vat.py                # VAT/sales tax
+|   |   |   `-- deductible.py         # deductible classification
+|   |   |
+|   |   |-- budget/
+|   |   |   |-- __init__.py
+|   |   |   |-- limits.py             # category limits
+|   |   |   |-- variance.py           # actual vs budget
+|   |   |   `-- alerts.py             # threshold warnings
+|   |   |
+|   |   |-- recurring/
+|   |   |   |-- __init__.py
+|   |   |   |-- normalize.py          # weekly/yearly -> monthly
+|   |   |   |-- project.py            # future expense forecast
+|   |   |   `-- detect.py             # auto-suggest from history
+|   |   |
+|   |   |-- notifications/
+|   |   |   |-- __init__.py
+|   |   |   |-- rules.py              # user-defined rules
+|   |   |   |-- triggers.py           # threshold events
+|   |   |   `-- events.py             # event bus
+|   |   |
+|   |   |-- webhooks/
+|   |   |   |-- __init__.py
+|   |   |   |-- dispatcher.py         # POST to configured URLs
+|   |   |   `-- payloads.py           # JSON payload builders
+|   |   |
+|   |   |-- plugins/
+|   |   |   |-- __init__.py
+|   |   |   |-- registry.py           # plugin discovery
+|   |   |   |-- hooks.py              # hook points
+|   |   |   `-- api.py                # public plugin API
+|   |   |
+|   |   |-- api/                      # local HTTP API for GUI
+|   |   |   |-- __init__.py
+|   |   |   |-- server.py
+|   |   |   |-- routes.py
+|   |   |   `-- schemas.py
+|   |   |
+|   |   |-- search/
+|   |   |   |-- __init__.py
+|   |   |   |-- index.py              # in-memory index
+|   |   |   `-- query.py
+|   |   |
+|   |   |-- tags/
+|   |   |   |-- __init__.py
+|   |   |   `-- manager.py            # cross-cutting labels
+|   |   |
+|   |   |-- audit/
+|   |   |   |-- __init__.py
+|   |   |   |-- log.py                # append-only change log
+|   |   |   `-- events.py
+|   |   |
+|   |   |-- importers/
+|   |   |   |-- __init__.py
+|   |   |   |-- stripe_csv.py
+|   |   |   |-- paddle_csv.py
+|   |   |   |-- gumroad_csv.py
+|   |   |   |-- appstore_csv.py
+|   |   |   `-- generic_csv.py
+|   |   |
+|   |   |-- exporters/
+|   |   |   |-- __init__.py
+|   |   |   |-- csv.py
+|   |   |   |-- json.py
+|   |   |   |-- pdf.py
+|   |   |   `-- accountant.py         # format an accountant accepts
+|   |   |
+|   |   |-- invoicing/
+|   |   |   |-- __init__.py
+|   |   |   |-- generator.py          # invoice PDF builder
+|   |   |   |-- numbering.py          # INV-2026-0001 scheme
+|   |   |   `-- branding.py           # logo, colors
+|   |   |
+|   |   |-- time_tracking/
+|   |   |   |-- __init__.py
+|   |   |   |-- hours.py              # dev hours per product
+|   |   |   `-- effective_rate.py     # $/hr calculation
+|   |   |
+|   |   |-- sandbox/
+|   |   |   |-- __init__.py
+|   |   |   |-- demo_data.py          # generate fake data
+|   |   |   `-- reset.py
+|   |   |
+|   |   `-- sync/
+|   |       |-- __init__.py
+|   |       |-- orchestrator.py       # coordinate multiple syncs
+|   |       |-- conflict.py           # conflict resolution
+|   |       `-- state.py
+|   |
+|   `-- mizan_zarb/                   # THE CLI (MIT)
+|       |-- __init__.py
+|       |-- __main__.py               # python -m mizan_zarb
+|       |-- cli.py                    # argparse entry
+|       |-- app.py                    # main loop
+|       |-- config.py                 # first-run wizard
+|       |-- render.py                 # table engine
+|       |-- prompts.py                # input + re-prompt
+|       |
+|       |-- screens/
+|       |   |-- __init__.py
+|       |   |-- dashboard.py
+|       |   |-- products.py
+|       |   |-- customers.py
+|       |   |-- subscriptions.py
+|       |   |-- mrr_movements.py
+|       |   |-- transactions.py
+|       |   |-- platform_fees.py
+|       |   |-- expenses.py
+|       |   |-- recurring.py
+|       |   |-- budgets.py
+|       |   |-- acquisition.py
+|       |   |-- tags.py
+|       |   |-- search.py
+|       |   |-- audit_log.py
+|       |   |-- reports_menu.py
+|       |   |-- reports/
+|       |   |   |-- pnl.py
+|       |   |   |-- unit_economics.py
+|       |   |   |-- runway.py
+|       |   |   |-- forecast.py
+|       |   |   |-- cohorts.py
+|       |   |   |-- concentration.py
+|       |   |   |-- tax_reserve.py
+|       |   |   |-- effective_rate.py
+|       |   |   `-- category_breakdown.py
+|       |   |-- settings.py
+|       |   |-- plugins_menu.py
+|       |   `-- help.py
+|       |
+|       `-- commands/                 # scriptable non-interactive
+|           |-- __init__.py
+|           |-- report.py             # mizan report pnl
+|           |-- export.py             # mizan export --format csv
+|           |-- import_cmd.py         # mizan import stripe file.csv
+|           |-- backup.py             # mizan backup / restore
+|           |-- search.py             # mizan search "query"
+|           `-- plugin.py             # mizan plugin list / enable
+|
+|-- tests/
+|   |-- __init__.py
+|   |-- conftest.py
+|   |-- test_money.py
+|   |-- test_models.py
+|   |-- test_errors.py
+|   |-- test_validation.py
+|   |-- test_config.py
+|   |
+|   |-- test_storage/
+|   |   |-- test_json_store.py
+|   |   |-- test_atomic.py
+|   |   |-- test_backup.py
+|   |   `-- test_migrations.py
+|   |
+|   |-- test_fees.py
+|   |-- test_currency.py
+|   |
+|   |-- test_formulas/
+|   |   |-- test_revenue.py
+|   |   |-- test_churn.py
+|   |   |-- test_unit_econ.py
+|   |   |-- test_margins.py
+|   |   |-- test_survival.py
+|   |   `-- test_goals.py
+|   |
+|   |-- test_reports/
+|   |   |-- test_dashboard.py
+|   |   |-- test_pnl.py
+|   |   |-- test_runway.py
+|   |   `-- test_forecast.py
+|   |
+|   |-- test_analytics/
+|   |   |-- test_cohort.py
+|   |   |-- test_concentration.py
+|   |   |-- test_anomaly.py
+|   |   `-- test_effective_rate.py
+|   |
+|   |-- test_tax.py
+|   |-- test_budget.py
+|   |-- test_recurring.py
+|   |-- test_notifications.py
+|   |-- test_webhooks.py
+|   |-- test_plugins.py
+|   |-- test_search.py
+|   |-- test_tags.py
+|   |-- test_audit.py
+|   |-- test_invoicing.py
+|   |-- test_time_tracking.py
+|   |-- test_sandbox.py
+|   |
+|   |-- test_importers/
+|   |   |-- test_stripe_csv.py
+|   |   |-- test_paddle_csv.py
+|   |   `-- test_generic_csv.py
+|   |
+|   |-- test_exporters/
+|   |   |-- test_csv.py
+|   |   |-- test_json.py
+|   |   `-- test_accountant.py
+|   |
+|   |-- fixtures/
+|   |   |-- empty_state.json
+|   |   |-- sample_state.json
+|   |   |-- multi_currency_state.json
+|   |   |-- stripe_export.csv
+|   |   |-- paddle_export.csv
+|   |   `-- gumroad_export.csv
+|   |
+|   `-- test_cli/
+|       |-- test_dashboard_screen.py
+|       |-- test_products_screen.py
+|       |-- test_render.py
+|       |-- test_prompts.py
+|       `-- test_commands.py
+|
+|-- scripts/
+|   |-- bootstrap.sh                  # set up fresh dev env
+|   |-- release.sh                    # bump version, tag, push
+|   `-- seed_demo.py                  # generate fake demo data
+|
+|-- .gitattributes
+|-- .gitignore
+|-- .pre-commit-config.yaml
+|-- .editorconfig
+|-- CHANGELOG.md
+|-- CONTRIBUTING.md
+|-- CODE_OF_CONDUCT.md
+|-- SECURITY.md
+|-- LICENSE
+|-- README.md
+|-- pyproject.toml
+|-- mkdocs.yml
+`-- Makefile
+
+
+
+
+------------------------------------------------------------------------
+
+
+mizan-zarb-studio/
+|
+|-- .github/
+|   `-- workflows/
+|       |-- build.yml                 # build DMG/MSI/AppImage
+|       `-- release.yml               # sign + notarize + upload
+|
+|-- src/
+|   `-- mizan_zarb_studio/
+|       |-- __init__.py
+|       |-- __main__.py
+|       |-- app.py                    # main window bootstrap
+|       |-- theme.py                  # colors, fonts
+|       |-- license.py                # license key validation
+|       |-- updater.py                # auto-update check
+|       |
+|       |-- services/
+|       |   |-- __init__.py
+|       |   |-- state_service.py      # wraps core storage
+|       |   |-- vault.py              # encrypted local storage
+|       |   |-- scheduler.py          # scheduled reports
+|       |   `-- notifications.py
+|       |
+|       |-- sync/
+|       |   |-- __init__.py
+|       |   |-- stripe_sync.py
+|       |   |-- paddle_sync.py
+|       |   |-- gumroad_sync.py
+|       |   `-- appstore_sync.py
+|       |
+|       |-- widgets/
+|       |   |-- __init__.py
+|       |   |-- table.py              # sortable data table
+|       |   |-- metric_card.py
+|       |   |-- chart.py
+|       |   |-- cohort_heatmap.py
+|       |   |-- invoice_builder.py
+|       |   `-- date_picker.py
+|       |
+|       |-- views/
+|       |   |-- __init__.py
+|       |   |-- dashboard.py
+|       |   |-- products.py
+|       |   |-- customers.py
+|       |   |-- subscriptions.py
+|       |   |-- transactions.py
+|       |   |-- expenses.py
+|       |   |-- acquisition.py
+|       |   |-- reports.py
+|       |   |-- settings.py
+|       |   `-- about.py
+|       |
+|       `-- assets/
+|           |-- icons/
+|           |-- fonts/
+|           `-- images/
+|
+|-- packaging/
+|   |-- macos/
+|   |   |-- Info.plist
+|   |   |-- entitlements.plist
+|   |   `-- build_dmg.sh
+|   |-- windows/
+|   |   |-- installer.iss
+|   |   `-- build_msi.ps1
+|   `-- linux/
+|       |-- mizan-zarb-studio.desktop
+|       `-- build_appimage.sh
+|
+|-- tests/
+|   |-- test_license.py
+|   |-- test_sync_stripe.py
+|   `-- test_vault.py
+|
+|-- landing/
+|   |-- index.html
+|   |-- pricing.html
+|   |-- styles.css
+|   `-- assets/
+|
+|-- docs/
+|   |-- getting-started.md
+|   |-- license-key.md
+|   |-- sync-setup.md
+|   `-- faq.md
+|
+|-- .gitignore
+|-- EULA.md
+|-- LICENSE
+|-- PRIVACY.md
+|-- REFUNDS.md
+|-- README.md
+`-- pyproject.toml
