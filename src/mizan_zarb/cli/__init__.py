@@ -1,0 +1,1 @@
+"""MizanZarb CLI — terminal frontend."""
