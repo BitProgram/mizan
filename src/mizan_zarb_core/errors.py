@@ -1,4 +1,5 @@
 """Exception hierarchy for MizanZarb core."""
+from __future__ import annotations
 
 
 class MizanZarbError(Exception):
