@@ -11,7 +11,7 @@ from typing import Final
 from .errors import InvalidAmountError, InvalidPercentError
 
 CENT: Final[Decimal] = Decimal("0.01")
-ZERO: Final[Decimal] = Decimal("0")
+ZERO: Final[Decimal] = Decimal("0") # pyright: ignore[reportInvalidTypeForm]
 ONE: Final[Decimal] = Decimal("1")
 
 CURRENCY_SYMBOLS: Final[dict[str:str]] = {

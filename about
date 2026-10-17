@@ -276,5 +276,3 @@ K. Rules (Never Break)
 □ CLI stays free forever
 □ Never break the public API without a major version bump
 That's the whole map. Every checkbox is a real task. Tick them one at a time.
-
-When you're ready, say "next" and I'll give you the next batch of files (LICENSE, README.md, pyproject.toml, ci.yml, and the core files to paste).
