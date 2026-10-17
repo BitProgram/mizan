@@ -29,5 +29,5 @@ notified when the first usable release lands.
 ## Install (when ready)
 
 ```bash
-pipx install mizan
+pipx install mizan-zarb
 
