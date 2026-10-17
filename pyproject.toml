@@ -1,5 +1,5 @@
 [project]
-name = "mizan"
+name = "mizan-zarb"
 version = "0.0.1"
 description = "The scale for your money — money OS for solo software developers"
 readme = "README.md"

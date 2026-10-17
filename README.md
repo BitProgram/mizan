@@ -1,4 +1,4 @@
-# Mizan
+# MizanZarb
 
 > The scale for your money.
 
