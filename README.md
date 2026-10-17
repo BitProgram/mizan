@@ -1,4 +1,4 @@
-# MizanZarb
+# Mizan
 
 > The scale for your money.
 
@@ -29,5 +29,5 @@ notified when the first usable release lands.
 ## Install (when ready)
 
 ```bash
-pipx install mizan-zarb
+pipx install mizan
 
